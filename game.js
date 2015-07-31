@@ -3,6 +3,8 @@ gridXMax = 26;
 gridYMax = 19;
 unitArr = [];
 unitCount = 0;
+production = 0;
+manpower = 0;
 //Initializing global variables
 window.onload = function(){
   var game = new Game(480, 480);
@@ -320,6 +322,7 @@ window.onload = function(){
   var battle = function(unit1,unit2){
     var object1 = unit1.parentObject;
     var object2 = unit2.parentObject;
+    console.log(unit1);
     var attack = object1.atk;
     var defense = object2.def;
     if(object1.piercing&&object2.armored){
@@ -358,6 +361,8 @@ window.onload = function(){
     }
     //Second DMG calculation
     unit1.canAttack = false;
+    console.log(object1.HP);
+    console.log(object2.HP);
   }
 
   game.rootScene.addEventListener('touchend', function(e){
@@ -375,25 +380,21 @@ window.onload = function(){
             spot1.move(x1,y1);
             unitArr[grid[x1][y1].unitIndex].canMove = false;
           }
-          if(grid[x1+1][y1].occupied&&grid[x1+1][y1].isEnemy&&canAttack){
-            console.log("please");
+          if(grid[x1+1][y1].occupied&&unitArr[grid[x1+1][y1].unitIndex].isEnemy&&unitArr[grid[x1][y1].unitIndex].canAttack){
             if(confirm("Attack the enemy?")){
-              battle(spot1,grid[x1+1][y1]);
+              battle(spot1,unitArr[grid[x1+1][y1].unitIndex]);
             }
-          }else if(grid[x1-1][y1].occupied&&grid[x1-1][y1].isEnemy&&canAttack){
-            console.log("please");
+          }else if(grid[x1-1][y1].occupied&&unitArr[grid[x1-1][y1].unitIndex].isEnemy&&unitArr[grid[x1][y1].unitIndex].canAttack){
             if(confirm("Attack the enemy?")){
-              battle(spot1,grid[x1-1][y1]);
+              battle(spot1,unitArr[grid[x1-1][y1].unitIndex]);
             }
-          }else if(grid[x1][y1+1].occupied&&grid[x1][y1+1].isEnemy&&canAttack){
-            if(game.input.up){
-              battle(spot1,grid[x1][y1+1]);
-            }else if(game.input.down){
+          }else if(grid[x1][y1+1].occupied&&unitArr[grid[x1][y1+1].unitIndex].isEnemy&&sunitArr[grid[x1][y1].unitIndex].canAttack){
+            if(confirm("Attack the enemy?")){
+              battle(spot1,unitArr[grid[x1][y1+1].unitIndex]);
             }
-          }else if(grid[x1][y1-1].occupied&&grid[x1][y1-1].isEnemy&&canAttack){
-            if(game.input.up){
-              battle(spot1,grid[x1][y1-1]);
-            }else if(game.input.down){
+          }else if(grid[x1][y1-1].occupied&&unitArr[grid[x1][y1-1].unitIndex].isEnemy&&unitArr[grid[x1][y1].unitIndex].canAttack){
+            if(confirm("Attack the enemy?")){
+              battle(spot1,unitArr[grid[x1][y1-1].unitIndex]);
             }
           }
         }
@@ -407,6 +408,58 @@ window.onload = function(){
       })
     }
     });
+  
+  var enemyMove = function(enemy){
+    var targetX = 0;
+    var targetY = 6;
+    var movementLeft = enemy.movement;
+    var distance = Math.abs(enemy.xInt-targetX)+Math.abs(enemy.yInt-targetY);
+    if(!grid[targetX][targetY].occupied&&distance<=enemy.movement){
+      enemy.move(targetX,targetY);
+      enemy.canMove = false;
+    }else if(!grid[targetX+1][targetY].occupied&&distance<=enemy.movement){
+      enemy.move(targetX+1,targetY);
+      enemy.canMove = false;
+    }else if(!grid[targetX][targetY+1].occupied&&distance<=enemy.movement){
+      enemy.move(targetX,targetY+1);
+      enemy.canMove = false;
+      }else if(!grid[targetX][targetY-1].occupied&&distance<=enemy.movement){
+        enemy.move(targetX,targetY-1);
+        enemy.canMove = false;
+      }else{
+        while(enemy.canMove){
+          if(targetX!=enemy.xInt){
+            if(enemy.xInt-movementLeft>=0){
+              if(!grid[enemy.xInt-movementLeft][enemy.yInt].occupied){
+               enemy.move(enemy.xInt-movementLeft,enemy.yInt);
+               enemy.canMove = false;
+               movementLeft = 0;
+              }
+            }else if(!grid[targetX,enemy.yInt].occupied){
+              movementLeft-=enemy.xInt;
+              enemy.move(targetX,enemy.yInt);
+              enemy.canMove = false;
+            }
+          }else if(targetY!=enemy.yInt){
+            if(enemy.yInt-movementLeft>=0){
+              if(!grid[enemy.xInt][enemy.yInt-movementLeft].occupied){
+                enemy.move(enemy.xInt,targetY-movementLeft);
+                enemy.canMove = false;
+                movementLeft = 0;
+              }
+            }else if(!grid[enemy.xInt][targetY].occupied){
+              movementLeft-=enemy.yInt;
+              enemy.move(enemy.xInt,targetY);
+              enemy.canMove = false;
+            }
+          }
+          if(enemy.canMove){
+            movementLeft-=1;
+          }
+        } 
+      }
+    setUnits();
+  }
 
   game.onload = function(){
     setMaps();
@@ -418,13 +471,15 @@ window.onload = function(){
     var rpg = factory.createUnit({unitType: 'RPG', x: 5, y: 6});
     var jeep = factory.createUnit({unitType: 'Jeep', x: 5, y: 7});
     var tank = factory.createUnit({unitType: 'Tank', x: 5, y: 8});
-    var enemySoldier = factory.createUnit({unitType: 'enemySoldier', x: 8, y: 5});
-    var enemySoldier1 = factory.createUnit({unitType: 'enemySoldier', x: 8, y: 4});
-    var enemyRPG = factory.createUnit({unitType: 'enemyRPG', x: 8, y: 6});
-    var enemyJeep = factory.createUnit({unitType: 'enemyJeep', x: 8, y: 7});
-    var enemyTank = factory.createUnit({unitType: 'enemyTank', x: 8, y: 8});
+    var enemySoldier = factory.createUnit({unitType: 'enemySoldier', x: 14, y: 5});
+    var enemySoldier1 = factory.createUnit({unitType: 'enemySoldier', x: 14, y: 4});
+    var enemyRPG = factory.createUnit({unitType: 'enemyRPG', x: 14, y: 6});
+    var enemyJeep = factory.createUnit({unitType: 'enemyJeep', x: 14, y: 7});
+    var enemyTank = factory.createUnit({unitType: 'enemyTank', x: 14, y: 8});
 
+    var targetDummy = factory.createUnit({unitType: 'enemySoldier', x: 9, y: 5});
     setUnits();
+    enemyMove(enemySoldier.unit);
   };
   game.start();
 };
