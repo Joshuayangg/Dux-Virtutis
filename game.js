@@ -5,7 +5,7 @@ unitArr = [];
 unitCount = 0;
 production = 0;
 manpower = 0;
-displayinglabels();
+displayinglabels = false;
 
 //Initializing global variables
 window.onload = function(){
