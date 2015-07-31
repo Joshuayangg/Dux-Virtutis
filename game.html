@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tyranny</title>
+    <link rel="stylesheet" type="text/css" href="game.css"> 
+  </head>
+  <body>
+    <div id="player_command" class="userInterface">
+      <span class="troop-dispenser">
+        <div class="dispenseBox"></div>
+        <div class="dispenseBox"></div>
+      </span>
+    </div>
+    <div class="menu item-container">
+      <div class="inventory-box">
+         <img src="redSoldier.png" alt="redSoldier" class="item" id="redSoldier">
+         <img src="blueSoldier.png" alt="blueSoldier" class="item" id="blueSoldier">
+      </div>
+    </div>
+      <div id= "tyranny"><font id="tyrannyText">Tyranny</font></div>
+      <div id= "tyrannyRect"></div>
+    <div class = "upgradePolicies" id = "rect">
+      <font color = "white" size = "8">Policies</font>
+      <hr>
+      <font color = "white" size = "6">Manpower</font>
+      <font color = "white" size = "6">Production</font>
+     <div class = "upgradeButtonsPolicies">
+       <button type="button" id="recruitingI" class="button">Recruiting I</button> 
+       <hr>
+       <button type="button" id="conscriptionI" class="button" disabled>Conscription I</button>
+       <button type="button" id="totalWarfareI" class="button" disabled>Total Warfare I</button>
+       <button type="button" id="recruitingII" class="button" disabled>Recruiting II</button>
+       <hr>
+       <button type="button" id="conscriptionII" class="button" disabled>Conscription II</button>
+       <button type="button" id="totalWarfareII" class="button" disabled>Total Warfare II</button>
+       <button type="button" id="patriotismI" class="button" disabled>Patriotism I</button>
+       <hr>
+       <button type="button" id="conscriptionIII" class="button" disabled>Conscription III</button>
+       <button type="button" id="childSoldiers" class="button" disabled>Child Soldiers</button>
+       <button type="button" id="patriotismII" class="button" disabled>Patriotism II</button>
+
+     </div>
+    </div>
+    <script type="text/javascript" src="enchant.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="map.js"></script>
+  </body>
+</html>
