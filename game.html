@@ -7,24 +7,31 @@
   </head>
   <body>
     <div id="player_command" class="userInterface">
-      <span class="troop-dispenser">
-        <div class="dispenseBox"></div>
-        <div class="dispenseBox"></div>
-      </span>
     </div>
+    <font id="money" color = "black" size = "6">Your Money: </font>
     <div class="menu item-container">
       <div class="inventory-box">
-         <img src="redSoldier.png" alt="redSoldier" class="item" id="redSoldier">
          <img src="blueSoldier.png" alt="blueSoldier" class="item" id="blueSoldier">
+         <img src="blueCannon.png" alt="blueCannon" class="item" id="blueCannon">
+         <img src="blueJeep.png" alt="blueJeep" class="item" id="blueJeep">
+         <img src="blueTank.png" alt="blueTank" class="item" id="blueTank">
+      </div>
+      <div class="inventory-text">
+         <font color = "black" id="blueSoldier-text">$150</font>
+         <hr>
+         <font color = "black" id="blueCannon-text">$200</font>
+         <hr>
+         <font color = "black" id="blueJeep-text">$200</font>
+         <hr>
+         <font color = "black" id="blueTank-text">$300</font>
       </div>
     </div>
       <div id= "tyranny"><font id="tyrannyText">Tyranny</font></div>
       <div id= "tyrannyRect"></div>
     <div class = "upgradePolicies" id = "rect">
+      <div id="box"></div>
       <font color = "white" size = "8">Policies</font>
       <hr>
-      <font color = "white" size = "6">Manpower</font>
-      <font color = "white" size = "6">Production</font>
      <div class = "upgradeButtonsPolicies">
        <button type="button" id="recruitingI" class="button">Recruiting I</button> 
        <hr>
