@@ -5,6 +5,7 @@ unitArr = [];
 unitCount = 0;
 production = 0;
 manpower = 0;
+
 //Initializing global variables
 window.onload = function(){
   var game = new Game(480, 480);
@@ -117,6 +118,8 @@ window.onload = function(){
       this.currentBlock.unitIndex = null;
       grid[x][y].occupied = true;
       this.currentBlock = grid[x][y];
+      this.xInt = x;
+      this.yInt = y;
     }
     unitArr.push(this.unit);
     //Position and sprite variables
@@ -148,7 +151,7 @@ window.onload = function(){
     this.personCost = 150;
     this.productionCost = 100;
     this.setUnit = function(x,y){
-      Unit.prototype.setUnit.call(this,x,y,3,1);
+      Unit.prototype.setUnit.call(this,x,y,4,1);
     }
     this.setUnit(options.x,options.y);
   }
@@ -165,7 +168,7 @@ window.onload = function(){
     this.personCost = 200;
     this.productionCost = 150;
     this.setUnit = function(x,y){
-       Unit.prototype.setUnit.call(this,x,y,3,14);
+       Unit.prototype.setUnit.call(this,x,y,4,14);
     }
     this.setUnit(options.x,options.y);
   }
@@ -182,7 +185,7 @@ window.onload = function(){
     this.personCost = 200;
     this.productionCost = 250;
     this.setUnit = function(x,y){
-       Unit.prototype.setUnit.call(this,x,y,5,12);
+       Unit.prototype.setUnit.call(this,x,y,6,12);
     }
     this.setUnit(options.x,options.y);
   }
@@ -199,7 +202,7 @@ window.onload = function(){
     this.personCost = 300;
     this.productionCost = 400;
     this.setUnit = function(x,y){
-       Unit.prototype.setUnit.call(this,x,y,4,10);
+       Unit.prototype.setUnit.call(this,x,y,5,10);
     }
     this.setUnit(options.x,options.y);
   }
@@ -208,9 +211,9 @@ window.onload = function(){
   //End of Tank
 
   function enemySoldier(options){
-    this.HP = 20;
-    this.atk = 12;
-    this.def = 2;
+    this.HP = 15;
+    this.atk = 9;
+    this.def = 1;
     this.armored = false;
     this.piercing = false;
     this.personCost = 150;
@@ -220,15 +223,17 @@ window.onload = function(){
       this.unit.isEnemy = true;
     }
     this.setUnit(options.x,options.y);
+    //enemyMove(this.unit);
+    this.unit.canMove = false;
   }
   enemySoldier.prototype = Object.create(Unit.prototype);
   enemySoldier.prototype.constructor = enemySoldier;
   //End of Soldier
 
   function enemyRPG(options){
-    this.HP = 22;
-    this.atk = 8;
-    this.def = 2;
+    this.HP = 15;
+    this.atk = 7;
+    this.def = 1;
     this.armored = false;
     this.piercing = true;
     this.personCost = 200;
@@ -238,15 +243,17 @@ window.onload = function(){
        this.unit.isEnemy = true;
     }
     this.setUnit(options.x,options.y);
+    //enemyMove(this.unit);
+    this.unit.canMove = false;
   }
   enemyRPG.prototype = Object.create(Unit.prototype);
   enemyRPG.prototype.constructor = enemyRPG;
   //End of RPG
 
   function enemyJeep(options){
-    this.HP = 25;
-    this.atk = 12;
-    this.def = 4;
+    this.HP = 20;
+    this.atk = 10;
+    this.def = 2;
     this.armored = true;
     this.piercing = false;
     this.personCost = 200;
@@ -256,15 +263,17 @@ window.onload = function(){
        this.unit.isEnemy = true;
     }
     this.setUnit(options.x,options.y);
+    //enemyMove(this.unit);
+    this.unit.canMove = false;
   }
   enemyJeep.prototype = Object.create(Unit.prototype);
   enemyJeep.prototype.constructor = enemyJeep;
   //End of Jeep
 
   function enemyTank(options){
-    this.HP = 32;
-    this.atk = 15;
-    this.def = 6;
+    this.HP = 26;
+    this.atk = 13;
+    this.def = 4;
     this.armored = true;
     this.piercing = false;
     this.personCost = 300;
@@ -274,6 +283,8 @@ window.onload = function(){
        this.unit.isEnemy = true;
     }
     this.setUnit(options.x,options.y);
+    //enemyMove(this.unit);
+    this.unit.canMove = false;
   }
   enemyTank.prototype = Object.create(Unit.prototype);
   enemyTank.prototype.constructor = enemyTank;
@@ -333,7 +344,9 @@ window.onload = function(){
     if(attack>defense){
       object2.HP-=(attack-defense);
       if(object2.HP<=0){
-        unit2.removeFromScene();
+        unitArr.splice(unit2.currentBlock.unitIndex, 1);
+        setUnits();
+        console.log("dead");
         unit2.isDead = true;
         unit2.currentBlock.occupied = false;
         //Handle death
@@ -352,7 +365,7 @@ window.onload = function(){
       if(attack>defense){
         object1.HP-=((attack+(Math.random()*2-2)-defense));
         if(object1.HP<=0){
-          unit1.removeFromScene();
+          game.scene.removeChild(unit1);
           unit1.isDead = true;
           unit1.currentBlock.occupied = false;
           //Handle death
@@ -388,7 +401,7 @@ window.onload = function(){
             if(confirm("Attack the enemy?")){
               battle(spot1,unitArr[grid[x1-1][y1].unitIndex]);
             }
-          }else if(grid[x1][y1+1].occupied&&unitArr[grid[x1][y1+1].unitIndex].isEnemy&&sunitArr[grid[x1][y1].unitIndex].canAttack){
+          }else if(grid[x1][y1+1].occupied&&unitArr[grid[x1][y1+1].unitIndex].isEnemy&&unitArr[grid[x1][y1].unitIndex].canAttack){
             if(confirm("Attack the enemy?")){
               battle(spot1,unitArr[grid[x1][y1+1].unitIndex]);
             }
@@ -417,15 +430,19 @@ window.onload = function(){
     if(!grid[targetX][targetY].occupied&&distance<=enemy.movement){
       enemy.move(targetX,targetY);
       enemy.canMove = false;
+      alert("You Lose!");
     }else if(!grid[targetX+1][targetY].occupied&&distance<=enemy.movement){
       enemy.move(targetX+1,targetY);
       enemy.canMove = false;
+      alert("You Lose!");
     }else if(!grid[targetX][targetY+1].occupied&&distance<=enemy.movement){
       enemy.move(targetX,targetY+1);
       enemy.canMove = false;
-      }else if(!grid[targetX][targetY-1].occupied&&distance<=enemy.movement){
-        enemy.move(targetX,targetY-1);
-        enemy.canMove = false;
+      alert("You Lose!");
+    }else if(!grid[targetX][targetY-1].occupied&&distance<=enemy.movement){
+      enemy.move(targetX,targetY-1);
+      enemy.canMove = false;
+        alert("You Lose!");
       }else{
         while(enemy.canMove){
           if(targetX!=enemy.xInt){
@@ -461,6 +478,27 @@ window.onload = function(){
     setUnits();
   }
 
+  var checkTurn = function(){
+    var count = 0;
+    for(var x = 0; x < unitArr.length; x++){
+      if(!unitArr[x].canMove){
+        count++;
+      }
+    }
+    if(count===unitArr.length){
+      for(var x = 0; x < unitArr.length; x++){
+        unitArr[x].canMove = true;
+        unitArr[x].canAttack = true;
+        if(unitArr[x].isEnemy){
+          enemyMove(unitArr[x]);
+        }
+      }
+      alert("Your Turn");
+      production+=200;
+      manpower+=200;
+    }
+  }
+
   game.onload = function(){
     setMaps();
     setStage();
@@ -471,15 +509,15 @@ window.onload = function(){
     var rpg = factory.createUnit({unitType: 'RPG', x: 5, y: 6});
     var jeep = factory.createUnit({unitType: 'Jeep', x: 5, y: 7});
     var tank = factory.createUnit({unitType: 'Tank', x: 5, y: 8});
-    var enemySoldier = factory.createUnit({unitType: 'enemySoldier', x: 14, y: 5});
+    var enemySoldier = factory.createUnit({unitType: 'enemySoldier', x: 14, y: 7});
     var enemySoldier1 = factory.createUnit({unitType: 'enemySoldier', x: 14, y: 4});
     var enemyRPG = factory.createUnit({unitType: 'enemyRPG', x: 14, y: 6});
-    var enemyJeep = factory.createUnit({unitType: 'enemyJeep', x: 14, y: 7});
-    var enemyTank = factory.createUnit({unitType: 'enemyTank', x: 14, y: 8});
-
-    var targetDummy = factory.createUnit({unitType: 'enemySoldier', x: 9, y: 5});
+    var enemyJeep = factory.createUnit({unitType: 'enemyJeep', x: 14, y: 2});
+    var enemyTank = factory.createUnit({unitType: 'enemyTank', x: 14, y: 9});
     setUnits();
-    enemyMove(enemySoldier.unit);
+    game.rootScene.on('enterframe', function(e){
+      checkTurn();
+    });
   };
   game.start();
 };
