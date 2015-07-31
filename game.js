@@ -501,8 +501,6 @@ window.onload = function(){
     }
   }
 
-
-
 //var soldier = Object.create(unit);
 //calling buttons
 var recruitingI = document.getElementById("recruitingI");
@@ -694,7 +692,7 @@ var changeElement = function(id) {
 }
 
 
-game.onload = function(){
+  game.onload = function(){
     setMaps();
     setStage();
     //Factory creation
@@ -715,5 +713,5 @@ game.onload = function(){
     });
   };
   game.start();
-};
 
+};
